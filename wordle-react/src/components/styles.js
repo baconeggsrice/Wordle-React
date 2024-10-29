@@ -11,6 +11,7 @@ export const rowDisplay = {
 }
 
 export const boxStyle = {
+    borderRadius: '10px',
     width: '50px',
     height: '50px',
     border: '2px solid black',
@@ -18,7 +19,17 @@ export const boxStyle = {
     alignItems: 'center',
     justifyContent: 'center',
     fontSize: '24px',
-    userSelect: 'none',
-    //backgroundColor: isLocked ? '#e0e0e0' : 'white',
-    //backgroundColor: green ? 'green' : 'white',
+    color: 'black',
+};
+
+export const bgColors = {
+    green: {
+        backgroundColor: '#30c702',
+    },
+    yellow: {
+        backgroundColor: '#fcd912',
+    },
+    white: {
+        backgroundColor: 'white',
+    }
 };

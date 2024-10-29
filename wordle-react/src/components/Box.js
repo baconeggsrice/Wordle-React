@@ -1,9 +1,14 @@
 //import React, { useState, useEffect } from 'react';
-import { boxStyle } from './styles';
+import { boxStyle, bgColors } from './styles';
 
-function Box({ value }) {
+function Box({ value,color }) {
+    const defaultBoxStyle = {
+        ...boxStyle,
+        ...bgColors[color],
+    };
+
     return (
-        <div style={boxStyle}>
+        <div style={defaultBoxStyle}>
             {value}
         </div>
     );
