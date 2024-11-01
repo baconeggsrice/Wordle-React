@@ -4,47 +4,69 @@ import React, { useState, useEffect } from 'react';
 import { boxDisplay, rowDisplay } from "./styles.js";
 
 //const wordList = ["BAKER", "TRADE", "CRANE"];
-//const guessWord = "BAKER";
+const guessWord = "BAKER";
 
 function Board() {
 
-    const[colors, setColors] = useState(Array(5).fill('white'));
-    const[word, setWordLetter] = useState(Array(5).fill(null));
-    const[index, setIndex] = useState(0);
+    const[colors, setColors] = useState(Array(6).fill(Array(5).fill('white')));
+    const[words, setWord] = useState(Array(6).fill(Array(5).fill(null)));
+    const[index, setIndex] = useState(-1); //Sets the index of the current word
+    const[currRow, setCurrRow] = useState(0); //Sets the current word
     //const[isLocked, setIsLocked] = useState(false);
     //const[flags, setFlags] = useState(Array(5).fill(false));
 
     const handleKeyDown = (e) => {
         if(e.key.length === 1 && /^[a-zA-Z]$/.test(e.key)) {
-            const newLetter = e.key.toUpperCase();
-            setWordLetter((prevWord) => {
-                const newWord = Array.from(prevWord);
-                newWord[index] = newLetter;
-                console.log("Alphabetical Key:", index);
-                return newWord;
+            setIndex((prevIndex) => {
+                const newIndex = Math.min(prevIndex + 1, 4);
+                const newLetter = e.key.toUpperCase();
+                setWord((prevWords) => {
+                    const newWords = prevWords.map((word, wordIndex) => {
+                        if(wordIndex === currRow) {
+                            const newWord = [...word];
+                            newWord[newIndex] = newLetter;
+                            return newWord;
+                        }
+                        return word;
+                    });
+                    return newWords;
+                });
+                return newIndex;
             });
-            setIndex((prevIndex) => Math.min(prevIndex+1, 5));
-        } else if (e.key === 'Enter' && index === 5) {
+            
+            
+        } else if (e.key === 'Enter' && index === 4) {
             //setIsLocked(true);
-            // setColors(() => {
-            //     const [flagHint, colorHint] =  checkWin(word,guessWord);
-            //     setFlags(() => {
-            //         return flagHint;
-            //     });
-            //     const newColors = colorHint;
-            //     return newColors;
-            // });
-            setColors(() => {
-                const newColors = ['green', 'green','yellow', 'white', 'yellow'];
+            setColors((prevColors) => {
+                const colorHint =  checkWin(words[currRow],guessWord);
+                const newColors = prevColors.map((color, colorIndex) => {
+                    if  (colorIndex === currRow) {
+                        color = colorHint;
+                    }
+                    return color;
+                });
                 return newColors;
-            })
+            });
+            setCurrRow((prevCurrRow) => {
+                return (prevCurrRow + 1);
+            });
+            setIndex( () => {
+                const newIndex = -1;
+                return newIndex;
+            });
         } else if (e.key === 'Backspace') {
             setIndex((prevIndex) => {
-                const newIndex = Math.max(prevIndex - 1, 0);
-                setWordLetter((prevWord) => {
-                    const newWord = Array.from(prevWord);
-                    newWord[newIndex] = null;
-                    return newWord;
+                const newIndex = Math.max(prevIndex - 1, -1);
+                setWord((prevWords) => {
+                    const newWords = prevWords.map((word, wordIndex) => {
+                        if(wordIndex === currRow) {
+                            const newWord = [...word];
+                            newWord[index] = null;
+                            return newWord;
+                        }
+                        return word;
+                    });
+                    return newWords;
                 });
                 return newIndex;
             });
@@ -67,50 +89,50 @@ function Board() {
         <div className = "Board">
             <div style={rowDisplay}>
                 <div style ={boxDisplay}>
-                    <Box value = {word[0]} color = {colors[0]}/>
-                    <Box value = {word[1]} color = {colors[1]}/>
-                    <Box value = {word[2]} color = {colors[2]}/>
-                    <Box value = {word[3]} color = {colors[3]}/>
-                    <Box value = {word[4]} color = {colors[4]}/>
+                    <Box value = {words[0][0]} color = {colors[0][0]}/>
+                    <Box value = {words[0][1]} color = {colors[0][1]}/>
+                    <Box value = {words[0][2]} color = {colors[0][2]}/>
+                    <Box value = {words[0][3]} color = {colors[0][3]}/>
+                    <Box value = {words[0][4]} color = {colors[0][4]}/>
                 </div>
                 <>
                     <p>Index: {index}</p>
-                    <p>Word: {word}</p>
+                    <p>Word: {words}</p>
                 </>
                 <div style ={boxDisplay}>
-                    <Box value = {0}/>
-                    <Box value = {1}/>
-                    <Box value = {2}/>
-                    <Box value = {3}/>
-                    <Box value = {4}/>
+                    <Box value = {words[1][0]} color = {colors[1][0]}/>
+                    <Box value = {words[1][1]} color = {colors[1][0][1]}/>
+                    <Box value = {words[1][2]} color = {colors[1][2]}/>
+                    <Box value = {words[1][3]} color = {colors[1][3]}/>
+                    <Box value = {words[1][4]} color = {colors[1][4]}/>
                 </div>
                 <div style ={boxDisplay}>
-                    <Box />
-                    <Box />
-                    <Box />
-                    <Box />
-                    <Box />
+                    <Box value = {words[2][0]} color = {colors[2][0]}/>
+                    <Box value = {words[2][1]} color = {colors[2][1]}/>
+                    <Box value = {words[2][2]} color = {colors[2][2]}/>
+                    <Box value = {words[2][3]} color = {colors[2][3]}/>
+                    <Box value = {words[2][4]} color = {colors[2][4]}/>
                 </div>
                 <div style ={boxDisplay}>
-                    <Box />
-                    <Box />
-                    <Box />
-                    <Box />
-                    <Box />
+                    <Box value = {words[3][0]} color = {colors[3][0]}/>
+                    <Box value = {words[3][1]} color = {colors[3][1]}/>
+                    <Box value = {words[3][2]} color = {colors[3][2]}/>
+                    <Box value = {words[3][3]} color = {colors[3][3]}/>
+                    <Box value = {words[3][4]} color = {colors[3][4]}/>
                 </div>
                 <div style ={boxDisplay}>
-                    <Box />
-                    <Box />
-                    <Box />
-                    <Box />
-                    <Box />
+                    <Box value = {words[4][0]} color = {colors[4][0]}/>
+                    <Box value = {words[4][1]} color = {colors[4][1]}/>
+                    <Box value = {words[4][2]} color = {colors[4][2]}/>
+                    <Box value = {words[4][3]} color = {colors[4][3]}/>
+                    <Box value = {words[4][4]} color = {colors[4][4]}/>
                 </div>
                 <div style ={boxDisplay}>
-                    <Box />
-                    <Box />
-                    <Box />
-                    <Box />
-                    <Box />
+                    <Box value = {words[5][0]} color = {colors[5][0]}/>
+                    <Box value = {words[5][1]} color = {colors[5][1]}/>
+                    <Box value = {words[5][2]} color = {colors[5][2]}/>
+                    <Box value = {words[5][3]} color = {colors[5][3]}/>
+                    <Box value = {words[5][4]} color = {colors[5][4]}/>
                 </div>
             </div>
         </div>
@@ -119,26 +141,26 @@ function Board() {
 
 export default Board;
 
-// function checkWin(word, guessWord) {
-//     let flags = [false, false, false, false, false];
-//     let colors = ['white', 'white', 'white', 'white', 'white'];
-//     for(let i = 0; i < 5; i++) {
-//         if (word[i] === guessWord[i]) {
-//             flags[i] = true;
-//             colors[i] = 'green';
-//         }
-//     }
+function checkWin(word, guessWord) {
+    let flags = [false, false, false, false, false];
+    let colors = ['white', 'white', 'white', 'white', 'white'];
+    for(let i = 0; i < 5; i++) {
+        if (word[i] === guessWord[i]) {
+            flags[i] = true;
+            colors[i] = 'green';
+        }
+    }
 
-//     for (let i = 0; i < 5; i++) {
-//         if (colors[i] === false) {
-//           for (let j = 0; j < 5; j++) {
-//             if (guessWord[i] === word[j] && !flags[j]) { //Triggers if flag that is being used isnt used
-//               colors[i] = 'yellow';
-//               flags[j] = true;
-//               break;
-//             }
-//           }
-//         }
-//     }
-//     return [flags, colors];
-// }
+    for (let i = 0; i < 5; i++) {
+        if (flags[i] === false) {
+          for (let j = 0; j < 5; j++) {
+            if (guessWord[i] === word[j] && !flags[j]) { //Triggers if flag that is being used isnt used
+              colors[i] = 'yellow';
+              flags[j] = true;
+              break;
+            }
+          }
+        }
+    }
+    return colors;
+}
