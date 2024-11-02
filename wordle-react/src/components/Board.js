@@ -4,7 +4,7 @@ import React, { useState, useEffect } from 'react';
 import { boxDisplay, rowDisplay } from "./styles.js";
 
 //const wordList = ["BAKER", "TRADE", "CRANE"];
-const guessWord = "BAKER";
+const guessWord = "BAKER".split("");
 
 function Board() {
 
@@ -13,7 +13,6 @@ function Board() {
     const[index, setIndex] = useState(-1); //Sets the index of the current word
     const[currRow, setCurrRow] = useState(0); //Sets the current word
     //const[isLocked, setIsLocked] = useState(false);
-    //const[flags, setFlags] = useState(Array(5).fill(false));
 
     const handleKeyDown = (e) => {
         if(e.key.length === 1 && /^[a-zA-Z]$/.test(e.key)) {
@@ -38,7 +37,8 @@ function Board() {
         } else if (e.key === 'Enter' && index === 4) {
             //setIsLocked(true);
             setColors((prevColors) => {
-                const colorHint =  checkWin(words[currRow],guessWord);
+                const colorHint =  checkWin(words[currRow], guessWord);
+                console.log(colorHint);
                 const newColors = prevColors.map((color, colorIndex) => {
                     if  (colorIndex === currRow) {
                         color = colorHint;
@@ -95,10 +95,6 @@ function Board() {
                     <Box value = {words[0][3]} color = {colors[0][3]}/>
                     <Box value = {words[0][4]} color = {colors[0][4]}/>
                 </div>
-                <>
-                    <p>Index: {index}</p>
-                    <p>Word: {words}</p>
-                </>
                 <div style ={boxDisplay}>
                     <Box value = {words[1][0]} color = {colors[1][0]}/>
                     <Box value = {words[1][1]} color = {colors[1][0][1]}/>
@@ -152,7 +148,7 @@ function checkWin(word, guessWord) {
     }
 
     for (let i = 0; i < 5; i++) {
-        if (flags[i] === false) {
+        if (colors[i] === 'white') {
           for (let j = 0; j < 5; j++) {
             if (guessWord[i] === word[j] && !flags[j]) { //Triggers if flag that is being used isnt used
               colors[i] = 'yellow';
@@ -162,5 +158,7 @@ function checkWin(word, guessWord) {
           }
         }
     }
+    console.log("Word to be guessed", guessWord);
+    console.log("Word", word);
     return colors;
 }
